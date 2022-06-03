@@ -106,8 +106,10 @@ def analisa_oracao(oracao):
         doc = nlp(word)
         lemma = doc[0].lemma_
         if lemma in list(lista):
+            print("na lista palavras:", lemma,"; com valor: ",lista[lemma])
             sums.append(lemma)
-        if lemma in list(multiplicadores):
+        elif lemma in list(multiplicadores):
+            print("na lista de multiplicadores: ", lemma,";com valor: ",multiplicadores[lemma])
             mults.append(lemma)
         # se estiver em multiplicadores chamamos mult
     m = list(map(lambda a: multiplicadores[a], mults))
@@ -124,5 +126,5 @@ def analisa_oracao(oracao):
     print(sa)
     return sa
 
-s="Eu sou mau no Elden Ring"
+s="a gata fugiu para o jardim, porque precisava de fazer coco"
 analise(s)

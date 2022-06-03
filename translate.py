@@ -24,15 +24,15 @@ def gettrans(name):
     f.close()
     return pos
 
-badlist = gettrans("neg_en.cat")
-f = open("neg_pt.cat","w")
+badlist = gettrans("data/neg_en.cat")
+f = open("data/neg_pt.cat","w")
 for w in badlist:
     f.write(w)
     f.write("\n")
 f.close()
 
-goodlist = gettrans("pos_en.cat")
-f = open("pos_pt.cat","w")
+goodlist = gettrans("data/pos_en.cat")
+f = open("data/pos_pt.cat","w")
 for w in goodlist:
     f.write(w)
     f.write("\n")

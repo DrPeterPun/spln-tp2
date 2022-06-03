@@ -30,22 +30,20 @@ def prod(x,y):
 
 
 #lista de valores absolutos para palavras, entre -1 e 1
-lista = {"gosto":0.5,"desteto":-0.5,"passar":0.5,"reprovar":-0.5,"lido":0.5,"saboroso":0.5,"chumbei":-0.5}
+#lista = {"gosto":0.5,"desteto":-0.5,"passar":0.5,"reprovar":-0.5,"lido":0.5,"saboroso":0.5,"chumbei":-0.5}
 
 def fill_lista():
-    f= open("neg_pt.cat")
+    f= open("data/neg_pt.cat")
     for w in f.readlines():
         lista[w.strip("\n").lower()]=-0.5
     f.close()
 
-    f= open("pos_pt.cat")
+    f= open("data/pos_pt.cat")
     for w in f.readlines():
         lista[w.strip("\n").lower()]=0.5
     f.close()
 lista={}
 fill_lista()
-print()
-
 
 #palavras que alteral a intensidade do que foi dito. valores negativos passam de bom para mau e vice versa.
 #valores em mod maiores que 1 aumentam a intensidade, menores diminuem

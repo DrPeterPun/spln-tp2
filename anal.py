@@ -80,40 +80,49 @@ def flatten(l):
 def analise(s):
     s = flatten(dividir(s))
     print("a analisar a string:\n",s)
-    sl = list(map(lambda c:functools.reduce(lambda a ,b :  a +" " + b.lemma_, nlp(c), ''),s ))
-    print("lematized :")
-    print(sl)
-
-    sa_count= []
-    for oracao in sl:
-        print("a analisar a ora¢ão lematizada:\n",oracao)
-        sums =[]
-        mults=[]
-        #separamos sl por palavras
-        for word in oracao.split():
-            doc = nlp(word)
-            lemma = doc[0].lemma_
-            if lemma in list(lista):
-                sums.append(lemma)
-            if lemma in list(multiplicadores):
-                mults.append(lemma)
-            # se estiver em multiplicadores chamamos mult
-        m = list(map(lambda a: multiplicadores[a], mults))
-        m = functools.reduce(lambda a,b: a*b, m ,1)
-
-        a = list(map(lambda a: lista[a], sums))
-        if len(a)>0:
-            a = sum(a)/len(a)
-        else:
-            a = 0
-
-        print("SA desta oracao:")
-        sa = mult(a, m)
-        print(sa)
-        sa_count.append(sa)
+    sa_count = []
+    if isinstance(s,list):
+        sl = list(map(lambda c:functools.reduce(lambda a ,b :  a +" " + b.lemma_, nlp(c), ''),s ))
+        print("lematized :")
+        print(sl)
+        for oracao in sl:
+            if len(re.sub(r'\s','' , oracao))>0:
+                sa_count.append(analisa_oracao(oracao)) 
+            else:
+                #string vasia
+                pass
+    else:
+        sl = functools.reduce(lambda a ,b :  a +" " + b.lemma_, nlp(s), '')
+        sa_count.append(analisa_oracao(sl)) 
     print("Sa da string total")
     print(sum(sa_count)/(len(sa_count)))
 
+def analisa_oracao(oracao):
+    print("a analisar a ora¢ão lematizada:\n",oracao)
+    sums =[]
+    mults=[]
+    #separamos sl por palavras
+    for word in oracao.split():
+        doc = nlp(word)
+        lemma = doc[0].lemma_
+        if lemma in list(lista):
+            sums.append(lemma)
+        if lemma in list(multiplicadores):
+            mults.append(lemma)
+        # se estiver em multiplicadores chamamos mult
+    m = list(map(lambda a: multiplicadores[a], mults))
+    m = functools.reduce(lambda a,b: a*b, m ,1)
 
-s="Hoje sai de casa. Estava a chover muito... nao gostei"
+    a = list(map(lambda a: lista[a], sums))
+    if len(a)>0:
+        a = sum(a)/len(a)
+    else:
+        a = 0
+
+    print("SA desta oracao:")
+    sa = mult(a, m)
+    print(sa)
+    return sa
+
+s="Eu sou mau no Elden Ring"
 analise(s)

@@ -1,4 +1,5 @@
 import re
+import csv
 from googletrans import Translator #api de tradutor
 import functools #higher order functions
 #modulo de nlp em pt
@@ -31,7 +32,6 @@ def prod(x,y):
 
 #lista de valores absolutos para palavras, entre -1 e 1
 #lista = {"gosto":0.5,"desteto":-0.5,"passar":0.5,"reprovar":-0.5,"lido":0.5,"saboroso":0.5,"chumbei":-0.5}
-
 def fill_lista():
     f= open("data/neg_pt.cat")
     for w in f.readlines():
@@ -48,6 +48,21 @@ fill_lista()
 #palavras que alteral a intensidade do que foi dito. valores negativos passam de bom para mau e vice versa.
 #valores em mod maiores que 1 aumentam a intensidade, menores diminuem
 multiplicadores = {"nao":-1,"muito":2,"pouco":-2}
+
+# preenche um dicionário com emojis e o sentimento associado aos mesmos
+def build_emoji_dic():
+    dic = {}
+    with open('data/emoji.csv') as emojis:
+        csvreader = csv.DictReader(emojis)
+        for row in csvreader:
+            positive = float(row["Positive"])/float(row["Occurrences"])
+            negative = float(row["Negative"])/float(row["Occurrences"])
+            score = positive - negative
+            unicode = f'U+{ord(row["Emoji"]):X}'
+            dic[unicode] = round(score,3)
+    return dic
+
+emojis = build_emoji_dic()
 
 #lista de strings para serem testadas
 strings = [
@@ -81,7 +96,6 @@ def expressoes(frase):
     for phrase in nlp(frase).sents:
         state = 0
         for word in phrase:
-            
             if state==0:
                 if word.pos_ == 'ADV' or word.pos_ == 'ADJ' or word.lemma_.lower() == 'tudo':
                     exp = word.lemma_
@@ -127,6 +141,7 @@ def analisa_oracao(oracao):
     print("A analisar a oração:",oracao,"\n")
     sums =[]
     mults=[]
+    ems =[]
     #separamos sl por palavras e/ou expressões
     for exp in expressoes(oracao):
 
@@ -137,6 +152,11 @@ def analisa_oracao(oracao):
         elif exp in list(multiplicadores):
             print("Na lista de multiplicadores:", exp,"| com valor:",multiplicadores[exp],"\n")
             mults.append(exp)
+        elif len(exp) == 1:
+            unicode = f'U+{ord(exp):X}'
+            if unicode in list(emojis):
+                print("Na lista de emojis:", exp,"| com valor:", emojis[unicode],"\n")
+                ems.append(unicode)
 
         # se estamos perante uma expressão que não estava na lista nem nos multiplicadores
         elif len(exp.split())>1:
@@ -155,6 +175,7 @@ def analisa_oracao(oracao):
     m = functools.reduce(lambda a,b: a*b, m ,1)
 
     a = list(map(lambda a: lista[a], sums))
+    a += list(map(lambda a: emojis[a], ems))
     if len(a)>0:
         a = sum(a)/len(a)
     else:
@@ -165,5 +186,6 @@ def analisa_oracao(oracao):
     return sa
 
 #s="a gata fugiu para o jardim, porque precisava de fazer coco"
-s = "A gata sabia muito bem o que estava a fazer. Muito horrível. Queria que ficasse tudo bem."
+#s = "A gata sabia muito bem o que estava a fazer 😖.  Muito horrível 💀. Queria que ficasse tudo bem."
+s = "O filme foi muito mau! 👎"
 analise(s)

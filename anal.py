@@ -90,6 +90,22 @@ def flatten(l):
         return flatten(l[0])+flatten(l[1:])
     return l[:1]+flatten(l[1:])
 
+# limpar as mention, os links e o simbolo do hashtag da frase
+def cleanup(f): 
+
+    print("Frase original:", f)
+
+    link = re.compile(r"(?:(?:https?|ftp):\/\/|\b(?:[a-z\d]+\.))(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))?")
+    mention = re.compile(r"@[a-zA-Z0-9_.]*")
+
+    f = re.sub(link, "", f)
+    f = re.sub(mention, "", f)
+    f = re.sub("#", "", f)
+
+    print("Nova frase", f)
+
+    return f
+
 # divide uma frase em palavras e/ou expressões
 def expressoes(frase):
     output = []
@@ -120,8 +136,11 @@ def expressoes(frase):
 
 #analisa uma string
 def analise(s):
+    print("\nCleanup:")
+    s = cleanup(s)
+    print("--------------------------------------------------------------")
     s = flatten(dividir(s))
-    print("\nA analisar a string:",s)
+    print("A analisar a string:",s)
     sa_count = []
     if isinstance(s,list):
         for oracao in s:
@@ -186,6 +205,10 @@ def analisa_oracao(oracao):
     return sa
 
 #s="a gata fugiu para o jardim, porque precisava de fazer coco"
-#s = "A gata sabia muito bem o que estava a fazer 😖.  Muito horrível 💀. Queria que ficasse tudo bem."
-s = "O filme foi muito mau! 👎"
+
+#s = "O filme foi muito mau! 👎"
+#s = "Que foto fantástica! 🙏🏻❤️"
+
+s = "Que foto fantástica @adidas! 🙏🏻❤️ #espetacular #amei https://www.google.com/"
+
 analise(s)

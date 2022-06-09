@@ -47,7 +47,10 @@ fill_lista()
 
 #palavras que alteral a intensidade do que foi dito. valores negativos passam de bom para mau e vice versa.
 #valores em mod maiores que 1 aumentam a intensidade, menores diminuem
-multiplicadores = {"nao":-1,"muito":2,"pouco":-2}
+mpos = {"muito":2,"bastante":3,"tudo":3,"tanto":2,"todo":2,"mais":2,"tão":2,"provável":1.5,"suficiente":1.5}
+mmenos = {"talvez":0.75,"alguns":0.5,"possível":0.75}
+mneg = {"não":-1,"pouco":-2,"nenhum":-1,"nada":-1,"mal":-1}
+multiplicadores = mpos | mneg | mmenos
 
 #lista de strings para serem testadas
 strings = [
@@ -94,7 +97,7 @@ def analise(s):
     else:
         sl = functools.reduce(lambda a ,b :  a +" " + b.lemma_, nlp(s), '')
         sa_count.append(analisa_oracao(sl)) 
-    print("Sa da string total")
+    print("sa da string total")
     print(sum(sa_count)/(len(sa_count)))
 
 def analisa_oracao(oracao):
@@ -126,5 +129,41 @@ def analisa_oracao(oracao):
     print(sa)
     return sa
 
-s="a gata fugiu para o jardim, porque precisava de fazer coco"
+#supondo que temos um modelo alternativo que eu posso chamar com a funcao: altmodel(frase) que tbm devolve um nr entre -1 e 1
+#oracao antes da lematizacao :s
+def treina_oracao(s,oracao):
+    print("a treinar o modelo com a ora¢ão lematizada:\n",oracao)
+    sums =[]
+    mults=[]
+    #separamos sl por palavras
+    for word in oracao.split():
+        doc = nlp(word)
+        lemma = doc[0].lemma_
+        if lemma in list(lista):
+            print("na lista palavras:", lemma,"; com valor: ",lista[lemma])
+            sums.append(lemma)
+        elif lemma in list(multiplicadores):
+            print("na lista de multiplicadores: ", lemma,";com valor: ",multiplicadores[lemma])
+            mults.append(lemma)
+        # se estiver em multiplicadores chamamos mult
+    m = list(map(lambda a: multiplicadores[a], mults))
+    m = functools.reduce(lambda a,b: a*b, m ,1)
+
+    a = list(map(lambda a: lista[a], sums))
+    if len(a)>0:
+        a = sum(a)/len(a)
+    else:
+        a = 0.5# estava como 0 mas acho que da melhores resultados com 0.5
+
+    print("SA desta oracao:")
+    sa = mult(a, m)
+    altsa = altmodel(s)
+    #diferenca entre as avaliacoes
+    dif = altsa-sa
+    for palavra in sums:
+        lista[palavra]+=dif*0.1
+        pass
+
+
+s="a gata fugiu para o jardim"
 analise(s)

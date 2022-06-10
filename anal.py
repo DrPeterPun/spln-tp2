@@ -210,31 +210,52 @@ def analisa_oracao(oracao):
 #supondo que temos um modelo alternativo que eu posso chamar com a funcao: altmodel(frase) que tbm devolve um nr entre -1 e 1
 #oracao antes da lematizacao :s
 def treina_oracao(s,oracao):
-    print("a treinar o modelo com a ora¢ão lematizada:\n",oracao)
+    print("--------------------------------------------------------------")
+    print("A treinar o modelo com a oração lematizada:",oracao, "\n")
     sums =[]
     mults=[]
-    #separamos sl por palavras
-    for word in oracao.split():
-        doc = nlp(word)
-        lemma = doc[0].lemma_
-        if lemma in list(lista):
-            print("na lista palavras:", lemma,"; com valor: ",lista[lemma])
-            sums.append(lemma)
-        elif lemma in list(multiplicadores):
-            print("na lista de multiplicadores: ", lemma,";com valor: ",multiplicadores[lemma])
-            mults.append(lemma)
+    ems =[]
+    #separamos sl por palavras e/ou expressões
+    for exp in expressoes(oracao):
+
+        # verificamos se a expressão ou palavra está na lista ou nos multiplicadores
+        if exp in list(lista):
+            print("Na lista palavras:", exp,"| com valor:",lista[exp],"\n")
+            sums.append(exp)
+        elif exp in list(multiplicadores):
+            print("Na lista de multiplicadores:", exp,"| com valor:",multiplicadores[exp],"\n")
+            mults.append(exp)
+        elif len(exp) == 1:
+            unicode = f'U+{ord(exp):X}'
+            if unicode in list(emojis):
+                print("Na lista de emojis:", exp,"| com valor:", emojis[unicode],"\n")
+                ems.append(unicode)
+
+        # se estamos perante uma expressão que não estava na lista nem nos multiplicadores
+        elif len(exp.split())>1:
+            print("Partimos a expressão em ",exp.split(),"\n")
+            # partimos a expressão em palavras e verificamos se estas estão na lista ou nos multiplicadores
+            for word in oracao.split():
+                if word in list(lista):
+                    print("Na lista palavras:", word,"| com valor:",lista[word],"\n")
+                    sums.append(word)
+                elif word in list(multiplicadores):
+                    print("Na lista de multiplicadores:", word,"| com valor:",multiplicadores[word],"\n")
+                    mults.append(word)
+
         # se estiver em multiplicadores chamamos mult
     m = list(map(lambda a: multiplicadores[a], mults))
     m = functools.reduce(lambda a,b: a*b, m ,1)
 
     a = list(map(lambda a: lista[a], sums))
+    a += list(map(lambda a: emojis[a], ems))
     if len(a)>0:
         a = sum(a)/len(a)
     else:
         a = 0.5# estava como 0 mas acho que da melhores resultados com 0.5
 
-    print("SA desta oracao:")
     sa = mult(a, m)
+    print(">>>> SA desta oracao:", sa, "<<<<")
     altsa = altmodel(s)
     #diferenca entre as avaliacoes
     dif = altsa-sa
@@ -244,4 +265,5 @@ def treina_oracao(s,oracao):
 
 
 s="a gata fugiu para o jardim"
+#s="Que foto fantástica @adidas! 🙏🏻❤️ #espetacular #amei https://www.google.com/"
 analise(s)

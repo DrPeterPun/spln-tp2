@@ -1,0 +1,8 @@
+# folder with the output (for now at least)
+/out
+
+# mac files
+*.DS_Store
+
+__pycache__
+

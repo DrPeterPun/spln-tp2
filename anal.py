@@ -158,6 +158,8 @@ def analise(s):
     print("--------------------------------------------------------------")
     print("SA da string total:",sa,"\n")
 
+    return sa
+
 def analisa_oracao(oracao):
     print("--------------------------------------------------------------")
     print("A analisar a oração:",oracao,"\n")
@@ -264,6 +266,6 @@ def treina_oracao(s,oracao):
         pass
 
 
-s="a gata fugiu para o jardim"
+#s="a gata fugiu para o jardim"
 #s="Que foto fantástica @adidas! 🙏🏻❤️ #espetacular #amei https://www.google.com/"
-analise(s)
+#analise(s)

@@ -1,5 +1,6 @@
 import re
 import csv
+from tweet import load_t
 from googletrans import Translator #api de tradutor
 import functools #higher order functions
 #modulo de nlp em pt
@@ -148,24 +149,25 @@ def analise(s):
     if isinstance(s,list):
         for oracao in s:
             if len(re.sub(r'\s','' , oracao))>0:
-                sa_count.append(analisa_oracao(oracao)) 
+                sa_count.append(analisa_oracao(oracao))
             else:
                 #string vazia
                 pass
     else:
-        sa_count.append(analisa_oracao(s)) 
+        sa_count.append(analisa_oracao(s))
     sa = sum(sa_count)/(len(sa_count))
     print("--------------------------------------------------------------")
     print("SA da string total:",sa,"\n")
 
     return sa
 
-def analisa_oracao(oracao):
+def analisa_oracao(oracao,altdict=None):
     print("--------------------------------------------------------------")
     print("A analisar a oração:",oracao,"\n")
     sums =[]
     mults=[]
     ems =[]
+
     #separamos sl por palavras e/ou expressões
     for exp in expressoes(oracao):
 
@@ -197,9 +199,12 @@ def analisa_oracao(oracao):
         # se estiver em multiplicadores chamamos mult
     m = list(map(lambda a: multiplicadores[a], mults))
     m = functools.reduce(lambda a,b: a*b, m ,1)
-
-    a = list(map(lambda a: lista[a], sums))
+    if altdict:
+        a = list(map(lambda a: altdict[a], sums))
+    else:
+        a = list(map(lambda a: lista[a], sums))
     a += list(map(lambda a: emojis[a], ems))
+
     if len(a)>0:
         a = sum(a)/len(a)
     else:
@@ -211,7 +216,7 @@ def analisa_oracao(oracao):
 
 #supondo que temos um modelo alternativo que eu posso chamar com a funcao: altmodel(frase) que tbm devolve um nr entre -1 e 1
 #oracao antes da lematizacao :s
-def treina_oracao(s,oracao):
+def treina_oracao(oracao,altsa,dc):
     print("--------------------------------------------------------------")
     print("A treinar o modelo com a oração lematizada:",oracao, "\n")
     sums =[]
@@ -221,8 +226,8 @@ def treina_oracao(s,oracao):
     for exp in expressoes(oracao):
 
         # verificamos se a expressão ou palavra está na lista ou nos multiplicadores
-        if exp in list(lista):
-            print("Na lista palavras:", exp,"| com valor:",lista[exp],"\n")
+        if exp in list(dc):
+            print("Na lista palavras:", exp,"| com valor:",dc[exp],"\n")
             sums.append(exp)
         elif exp in list(multiplicadores):
             print("Na lista de multiplicadores:", exp,"| com valor:",multiplicadores[exp],"\n")
@@ -238,8 +243,8 @@ def treina_oracao(s,oracao):
             print("Partimos a expressão em ",exp.split(),"\n")
             # partimos a expressão em palavras e verificamos se estas estão na lista ou nos multiplicadores
             for word in oracao.split():
-                if word in list(lista):
-                    print("Na lista palavras:", word,"| com valor:",lista[word],"\n")
+                if word in list(dc):
+                    print("Na lista palavras:", word,"| com valor:",dc[word],"\n")
                     sums.append(word)
                 elif word in list(multiplicadores):
                     print("Na lista de multiplicadores:", word,"| com valor:",multiplicadores[word],"\n")
@@ -249,7 +254,7 @@ def treina_oracao(s,oracao):
     m = list(map(lambda a: multiplicadores[a], mults))
     m = functools.reduce(lambda a,b: a*b, m ,1)
 
-    a = list(map(lambda a: lista[a], sums))
+    a = list(map(lambda a: dc[a], sums))
     a += list(map(lambda a: emojis[a], ems))
     if len(a)>0:
         a = sum(a)/len(a)
@@ -258,13 +263,43 @@ def treina_oracao(s,oracao):
 
     sa = mult(a, m)
     print(">>>> SA desta oracao:", sa, "<<<<")
-    altsa = altmodel(s)
     #diferenca entre as avaliacoes
     dif = altsa-sa
     for palavra in sums:
-        lista[palavra]+=dif*0.1
+        dc[palavra]+=dif*0.1
         pass
 
+#treinar o modelo
+(dtreino,dteste) = load_t()
+dc = lista.copy()
+for o,s in dtreino.items():
+    treina_oracao(o,s,dc)
+
+#ver a diferenca que faz
+#nr de vezes que cada 1 deles esta certo
+resultados = {"ambos":0,"oric":0,"treina":0,"nenhum":0}
+for o,s in dteste:
+    orig = analisa_oracao(o)
+    treina = analisa_oracao(o,dc)
+
+    if s=="Positivo":
+        if orig>0.25 and treinado>0.25:
+            resultados["ambos"]+=1
+        if orig>0.25 and not treinado>0.25:
+            resultados["oric"]+=1
+        if not orig>0.25 and treinado>0.25:
+            resultados["triena"]+=1
+        if not orig>0.25 and not treinado>0.25:
+            resultados["nenhum"]+=1
+    else:
+        if orig>-0.25 and treinado>-0.25:
+            resultados["ambos"]+=1
+        if orig>-0.25 and not treinado>-0.25:
+            resultados["oric"]+=1
+        if not orig>-0.25 and treinado>-0.25:
+            resultados["triena"]+=1
+        if not orig>-0.25 and not treinado>-0.25:
+            resultados["nenhum"]+=1
 
 #s="a gata fugiu para o jardim"
 #s="Que foto fantástica @adidas! 🙏🏻❤️ #espetacular #amei https://www.google.com/"

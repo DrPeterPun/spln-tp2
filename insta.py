@@ -17,7 +17,7 @@ def get_info(username, password, account, n):
     profile = instaloader.Profile.from_username(l.context,
                                                 account)
     l.login(username, password)
- 
+
     posts = profile.get_posts()
 
     while n>0:
@@ -36,14 +36,14 @@ def get_info(username, password, account, n):
     comments=0
 
     for comment in post.get_comments():
-        text = re.sub(r'\n', ' ', comment.text)        
+        text = re.sub(r'\n', ' ', comment.text)
         f.write(text + "\n")
         for c in comment.answers:
-            text = re.sub(r'\n', ' ', c.text)   
+            text = re.sub(r'\n', ' ', c.text)
             f.write("   " + text + "\n")
             comments+= 1
         comments+=1
-    
+
     f.close()
 
     return likes, comments

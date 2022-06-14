@@ -113,7 +113,7 @@ def html(likes, comments,tabela):
                     '\t\t<th>Likes</th>\n',
                     '\t\t<th>Comments</th>\n',
                     '\t\t<th>Sentiment</th>\n','\t</tr>\n'])
-    (l,c,s) = tabela[1]:
+    (l,c,s) = tabela[1]
     content.extend( ['\t<tr>\n',
                         '\t\t<th>Valores médios </th>\n',
                         '\t\t<th>'+str(l)+'</th>\n',
@@ -125,10 +125,10 @@ def html(likes, comments,tabela):
 
     for l,c,s in tabela[1:]:
         content.extend(['\t<tr>\n',
-                        '\t\t<th>Comentário ' ++ i ++'</th>\n',
+                        '\t\t<th>Comentário ' + i +'</th>\n',
                         '\t\t<th>'+str("{:.2%}".format(l))+'</th>\n',
-                        '\t\t<th>'+str("{:.2%}".format(c)))+'</th>\n',
-                        '\t\t<th>'+str("{:.2%}".format(s)))+'</th>\n',
+                        '\t\t<th>'+str("{:.2%}".format(c))+'</th>\n',
+                        '\t\t<th>'+str("{:.2%}".format(s))+'</th>\n',
                         '\t</tr>\n'])
         i+=1
 
@@ -189,9 +189,9 @@ for i in range(N):
 
     posts.append(likes,comments,dic,avg_sa/len(dic))
 
-avg_likes = sum(map(lambda (l,c,d,s): l,posts))/len(posts)
-avg_comments = sum(map(lambda (l,c,d,s): c,posts))/len(posts)
-avg_sentv = sum(map(lambda (l,c,d,s): s,posts))/len(posts)
+avg_likes = sum(map(lambda  l,c,d,s : l,posts))/len(posts)
+avg_comments = sum(map(lambda l,c,d,s: c,posts))/len(posts)
+avg_sentv = sum(map(lambda l,c,d,s: s,posts))/len(posts)
 
 tabela = [(avg_likes,avg_comments,avg_sent)]
 print("analise dos ultimos ",N," posts")

@@ -146,18 +146,18 @@ def html(likes, comments,tabela):
 # como o instaloader, módulo de Python utilizado para recolher os comentários de um post de Instagram,
 # exige que se esteja logged in para aceder ao comentários, criou-se uma conta de teste com as seguintes
 # credênciais:
-USER = "helloworld.ipynb"
+USER = "hw_spln"
 PASSWORD = "SPLN2022"
 
 # username da conta à qual queremos ir buscar os comentários do último post
-ACCOUNT = "radiocomercial"
+ACCOUNT = "ines_ap"
 
 # flag que indica se queremos coletar os comentários do Instagram ou se queremos utilizar um documento já existente
 COLLECT = True
 
 # número dos post que queremos consultar
 # considera-se que a numeração começa no 0
-N = 2
+N = 1
 
 # escreve os comentário presentes no último post de Instgram do user ACCOUNT
 
@@ -187,11 +187,11 @@ for i in range(N):
         else:
             dic["Neutros"] += 1
 
-    posts.append(likes,comments,dic,avg_sa/len(dic))
+    posts.append((likes,comments,dic,avg_sa/len(dic)))
 
 avg_likes = sum(map(lambda  l,c,d,s : l,posts))/len(posts)
 avg_comments = sum(map(lambda l,c,d,s: c,posts))/len(posts)
-avg_sentv = sum(map(lambda l,c,d,s: s,posts))/len(posts)
+avg_sent = sum(map(lambda l,c,d,s: s,posts))/len(posts)
 
 tabela = [(avg_likes,avg_comments,avg_sent)]
 print("analise dos ultimos ",N," posts")
@@ -204,7 +204,7 @@ for l,c,d,s in posts:
     pdlikes = l/avg_likes
     pdcoms = c/avg_comments
     pdsent = s/avg_sent
-    tabela.append(pdlikes,pdcoms,pdsent)
+    tabela.append((pdlikes,pdcoms,pdsent))
     print(pdlikes,"\t",pdcoms,"\t",pdsent)
 
 

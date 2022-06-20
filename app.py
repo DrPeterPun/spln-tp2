@@ -126,7 +126,7 @@ def html(likes, comments,tabela):
 
     for l,c,s in tabela[1:]:
         content.extend(['\t<tr>\n',
-                        '\t\t<th>Comentário ' + str(i) +'</th>\n',
+                        '\t\t<th>Post ' + str(i) +'</th>\n',
                         '\t\t<th>'+str("{:.2%}".format(l))+'</th>\n',
                         '\t\t<th>'+str("{:.2%}".format(c))+'</th>\n',
                         '\t\t<th>'+str("{:.2%}".format(s))+'</th>\n',

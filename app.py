@@ -59,6 +59,7 @@ def html(likes, comments,tabela):
                 '\t\t.w3-ired {color:#FFFFFF !important;background-color:#a0503c !important}\n',
                 '\t\t.w3-iyellow {color:#FFFFFF !important;background-color:#d49d48 !important}\n',
                 '\t\t.w3-ipink {color:#FFFFFF !important;background-color:#d19998 !important}\n',
+                '\t\ttd, th{text-align:center; padding: 0 15px;}\n',
                 '\t</style>\n',
                 '\t<body>\n']
 
@@ -81,6 +82,36 @@ def html(likes, comments,tabela):
     # recolher a descrição do ficheiro .txt
     description = open(profile_path + '/' + dFile, 'r').read()
 
+        #add tabela
+    table = ''
+    table = table + ''.join(['<table>\n',
+                    '\t<tr>\n',
+                    '\t\t<th>\n'
+                    '\t\t<td>Likes</td>\n',
+                    '\t\t<td>Comments</td>\n',
+                    '\t\t<td>Sentiment</td>\n','\t</tr>\n'])
+
+    (l,c,s) = tabela[0]
+    table = table +''.join( ['\t<tr>\n',
+                        '\t\t<td>Valores médios </th>\n',
+                        '\t\t<td>'+ "{:.2f}".format(l) +'</td>\n',
+                        '\t\t<td>'+ "{:.2f}".format(c) +'</td>\n',
+                        '\t\t<td>'+ "{:.2f}".format(s) +'</td>\n',
+                        '\t</tr>\n'])
+
+    i=0
+
+    for l,c,s in tabela[1:]:
+        table = table +''.join(['\t<tr>\n',
+                        '\t\t<td>Post ' + str(i) +'</th>\n',
+                        '\t\t<td>'+str("{:.2%}".format(l))+'</td>\n',
+                        '\t\t<td>'+str("{:.2%}".format(c))+'</td>\n',
+                        '\t\t<td>'+str("{:.2%}".format(s))+'</td>\n',
+                        '\t</tr>\n'])
+        i+=1
+    
+    table = table +''.join(['\t</table>\n'])
+
     content.extend(['\t<div class="w3-row">\n',
                     '\t\t<div class="w3-container w3-third" style="padding:0.20cm">\n',
                     '\t\t\t<div class="w3-card" style="width:100%">\n',
@@ -97,43 +128,21 @@ def html(likes, comments,tabela):
                     '\t\t\t\t<img src="pie_chart.png"; style="width:100%">\n',
                     '\t\t\t</div>\n',
                     '\t\t\t<div class="w3-half w3-container" style="padding:0.20cm">\n',
+                    '\t\t\t\t<br>\n',
+                    '\t\t\t\t<br>\n',
+                    '\t\t\t\t<br>\n',
                     '\t\t\t\t<div class="w3-container w3-round w3-ired">\n',
                     '\t\t\t\t\t<p>Número de likes:&nbsp;' + str(likes) + '</p>\n',
                     '\t\t\t\t\t<p>Número de comentários:&nbsp;' + str(comments) + '</p>\n',
+                    '\t\t\t\t</div>\n',
+                    '\t\t\t\t<br>\n',
+                    '\t\t\t\t<div class="w3-container w3-center w3-round w3-iyellow">\n',
+                    table,
                     '\t\t\t\t</div>\n',
                     '\t\t\t</div>\n',
                     '\t\t</div>\n',
                     '\t\t</div>\n',
                     '\t</div>\n'])
-
-    #add tabela
-    content.extend(['<table>\n',
-                    '\t<tr>\n',
-                    '\t\t<th>\n'
-                    '\t\t<th>Likes</th>\n',
-                    '\t\t<th>Comments</th>\n',
-                    '\t\t<th>Sentiment</th>\n','\t</tr>\n'])
-
-    (l,c,s) = tabela[0]
-    content.extend( ['\t<tr>\n',
-                        '\t\t<th>Valores médios </th>\n',
-                        '\t\t<th>'+str(l)+'</th>\n',
-                        '\t\t<th>'+str(c)+'</th>\n',
-                        '\t\t<th>'+str(s)+'</th>\n',
-                        '\t</tr>\n'])
-
-    i=0
-
-    for l,c,s in tabela[1:]:
-        content.extend(['\t<tr>\n',
-                        '\t\t<th>Post ' + str(i) +'</th>\n',
-                        '\t\t<th>'+str("{:.2%}".format(l))+'</th>\n',
-                        '\t\t<th>'+str("{:.2%}".format(c))+'</th>\n',
-                        '\t\t<th>'+str("{:.2%}".format(s))+'</th>\n',
-                        '\t</tr>\n'])
-        i+=1
-
-    content.extend(['\t</table>\n'])
 
     # adicionar conteúdo final
     content.extend(['\t</body>\n',
@@ -170,8 +179,8 @@ for i in range(N):
     if COLLECT:
         likes, comments = get_info(USER, PASSWORD, ACCOUNT, i)
     else:
-        likes = 'undefined'
-        comments = 'undefined'
+        likes = 1
+        comments = 1
 
     # realiza a análise de sentimento dos comentários
     avg_sa=0

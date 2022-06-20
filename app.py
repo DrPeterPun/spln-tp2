@@ -125,7 +125,7 @@ def html(likes, comments,tabela):
 
     for l,c,s in tabela[1:]:
         content.extend(['\t<tr>\n',
-                        '\t\t<th>Comentário ' + i +'</th>\n',
+                        '\t\t<th>Comentário ' + str(i) +'</th>\n',
                         '\t\t<th>'+str("{:.2%}".format(l))+'</th>\n',
                         '\t\t<th>'+str("{:.2%}".format(c))+'</th>\n',
                         '\t\t<th>'+str("{:.2%}".format(s))+'</th>\n',
@@ -189,9 +189,11 @@ for i in range(N):
 
     posts.append((likes,comments,dic,avg_sa/len(dic)))
 
-avg_likes = sum(map(lambda  l,c,d,s : l,posts))/len(posts)
-avg_comments = sum(map(lambda l,c,d,s: c,posts))/len(posts)
-avg_sent = sum(map(lambda l,c,d,s: s,posts))/len(posts)
+print(posts)
+
+avg_likes = sum(map(lambda  p : p[0] ,posts))/len(posts)
+avg_comments = sum(map(lambda p : p[1] ,posts))/len(posts)
+avg_sent = sum(map(lambda p: p[3] ,posts))/len(posts)
 
 tabela = [(avg_likes,avg_comments,avg_sent)]
 print("analise dos ultimos ",N," posts")

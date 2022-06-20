@@ -113,7 +113,8 @@ def html(likes, comments,tabela):
                     '\t\t<th>Likes</th>\n',
                     '\t\t<th>Comments</th>\n',
                     '\t\t<th>Sentiment</th>\n','\t</tr>\n'])
-    (l,c,s) = tabela[1]
+
+    (l,c,s) = tabela[0]
     content.extend( ['\t<tr>\n',
                         '\t\t<th>Valores médios </th>\n',
                         '\t\t<th>'+str(l)+'</th>\n',
@@ -157,7 +158,7 @@ COLLECT = True
 
 # número dos post que queremos consultar
 # considera-se que a numeração começa no 0
-N = 1
+N = 2
 
 # escreve os comentário presentes no último post de Instgram do user ACCOUNT
 
@@ -167,17 +168,19 @@ for i in range(N):
     # dicionário que armazena o número de comentários positivos, neutros e negativos
     dic = {"Positivos": 0, "Negativos": 0, "Neutros": 0}
     if COLLECT:
-        likes, comments = get_info(USER, PASSWORD, ACCOUNT, N)
+        likes, comments = get_info(USER, PASSWORD, ACCOUNT, i)
     else:
         likes = 'undefined'
         comments = 'undefined'
 
     # realiza a análise de sentimento dos comentários
     avg_sa=0
+    ncoments = 0 
     for comment in open("out/comments.txt", "r").readlines():
         blockPrint()
         sa = analise(comment)
         avg_sa+=sa
+        ncoments +=1
         enablePrint()
         print(sa, ">", comment)
         if sa<0:
@@ -187,7 +190,7 @@ for i in range(N):
         else:
             dic["Neutros"] += 1
 
-    posts.append((likes,comments,dic,avg_sa/len(dic)))
+    posts.append((likes,comments,dic,avg_sa/ncoments))
 
 print(posts)
 
@@ -208,6 +211,7 @@ for l,c,d,s in posts:
     pdsent = s/avg_sent
     tabela.append((pdlikes,pdcoms,pdsent))
     print(pdlikes,"\t",pdcoms,"\t",pdsent)
+    print(l,"\t",c,"\t",s)
 
 
 print(dic)

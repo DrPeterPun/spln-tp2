@@ -304,9 +304,9 @@ def treina_modelo():
                 resultados["nenhum"]+=1
 
     print(resultados)
-    return resultados
+    return dc 
 
-#treina_modelo()
+# lista = treina_modelo()
 
 #s="a gata fugiu para o jardim"
 #s="Que foto fantástica @adidas! 🙏🏻❤️ #espetacular #amei https://www.google.com/"

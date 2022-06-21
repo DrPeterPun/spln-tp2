@@ -51,7 +51,7 @@ def html(likes, comments,tabela):
                 '<html>\n'
                 '\t<head>\n',
                 '\t\t<meta charset="UTF-8">\n',
-                '\t\t<title>Instagram Analysis</title>\n',
+                '\t\t<title>Instanalysis</title>\n',
                 '\t\t<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">\n',
                 '\t</head>\n',
                 '\t<style>\n',
@@ -64,7 +64,7 @@ def html(likes, comments,tabela):
                 '\t<body>\n']
 
     content.extend(['\t<div class="w3-container w3-igreen">\n',
-                    '\t\t<h1>Instagram Analysis</h1>\n',
+                    '\t\t<h1>Instanalysis</h1>\n',
                     '\t</div>\n'])
 
     photo = ''
@@ -87,13 +87,13 @@ def html(likes, comments,tabela):
     table = table + ''.join(['<table>\n',
                     '\t<tr>\n',
                     '\t\t<th>\n'
-                    '\t\t<td>Likes</td>\n',
-                    '\t\t<td>Comments</td>\n',
-                    '\t\t<td>Sentiment</td>\n','\t</tr>\n'])
+                    '\t\t<td>Gostos</td>\n',
+                    '\t\t<td>Comentários</td>\n',
+                    '\t\t<td>Sentimento</td>\n','\t</tr>\n'])
 
     (l,c,s) = tabela[0]
     table = table +''.join( ['\t<tr>\n',
-                        '\t\t<td>Valores médios </th>\n',
+                        '\t\t<td>Valores médios</th>\n',
                         '\t\t<td>'+ "{:.2f}".format(l) +'</td>\n',
                         '\t\t<td>'+ "{:.2f}".format(c) +'</td>\n',
                         '\t\t<td>'+ "{:.2f}".format(s) +'</td>\n',
@@ -132,7 +132,7 @@ def html(likes, comments,tabela):
                     '\t\t\t\t<br>\n',
                     '\t\t\t\t<br>\n',
                     '\t\t\t\t<div class="w3-container w3-round w3-ired">\n',
-                    '\t\t\t\t\t<p>Número de likes:&nbsp;' + str(likes) + '</p>\n',
+                    '\t\t\t\t\t<p>Número de gostos:&nbsp;' + str(likes) + '</p>\n',
                     '\t\t\t\t\t<p>Número de comentários:&nbsp;' + str(comments) + '</p>\n',
                     '\t\t\t\t</div>\n',
                     '\t\t\t\t<br>\n',
@@ -160,14 +160,14 @@ USER = "hw_spln"
 PASSWORD = "SPLN2022"
 
 # username da conta à qual queremos ir buscar os comentários do último post
-ACCOUNT = "ines_ap"
+ACCOUNT = "rfmportugal"
 
 # flag que indica se queremos coletar os comentários do Instagram ou se queremos utilizar um documento já existente
 COLLECT = True
 
 # número dos post que queremos consultar
-# considera-se que a numeração começa no 0
-N = 2
+# considera-se que a numeração começa no 1
+N = 4
 
 # escreve os comentário presentes no último post de Instgram do user ACCOUNT
 

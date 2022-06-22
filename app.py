@@ -1,6 +1,6 @@
 from tkinter import filedialog
 from insta import get_info
-from anal import analise
+from sa import analise
 import sys, os
 import matplotlib.pyplot as plt
 

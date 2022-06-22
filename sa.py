@@ -305,9 +305,3 @@ def treina_modelo():
 
     print(resultados)
     return dc 
-
-# lista = treina_modelo()
-
-#s="a gata fugiu para o jardim"
-#s="Que foto fantástica @adidas! 🙏🏻❤️ #espetacular #amei https://www.google.com/"
-#analise(s)
